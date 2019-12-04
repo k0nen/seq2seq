@@ -19,7 +19,7 @@ hidden_size = 256
 embed_size = 256
 n_layers = 1
 n_epochs = 1000
-batch_size = 4
+batch_size = 16
 clip = 1
 learning_rate = 0.01  # See half-life in train.train()
 teaching_rate = 0.5
@@ -52,8 +52,8 @@ if __name__ == '__main__':
 	model = seq2seq.Seq2seq(encoder, decoder).to(device)
 	if load_model:
 		model.load_state_dict(torch.load(model_path))
-		train.train(model, (input_lang, output_lang, pairs), batch_size, n_epochs, learning_rate,
-								teaching_rate, clip, model_path)
+		# train.train(model, (input_lang, output_lang, pairs), batch_size, n_epochs, learning_rate,
+		#						teaching_rate, clip, model_path)
 	else:
 		def init_weights(m):
 			for name, param in m.named_parameters():
@@ -65,4 +65,13 @@ if __name__ == '__main__':
 		train.train(model, (input_lang, output_lang, pairs), batch_size, n_epochs, learning_rate,
 								teaching_rate, clip, model_path)
 	else:
-		pass
+		model.load_state_dict(torch.load(model_path))
+		model.eval()
+
+		random.shuffle(pairs)
+		set_size = int(len(pairs) * 0.9) // batch_size * batch_size
+		train_set, valid_set = pairs[:set_size], pairs[set_size:]
+		valid_batch = [corpus.pairs2batch(input_lang, output_lang, valid_set[i:i + batch_size])
+									 for i in range(0, len(valid_set), batch_size)]
+		print('load ok')
+		train.sample(model, random.sample(valid_batch, 1)[0], output_lang)

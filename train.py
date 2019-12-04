@@ -70,7 +70,7 @@ def sample(model, batch, output_lang):
 		output = output[1:].argmax(2).t()
 		target = target[1:].t()
 
-		for i in range(2):
+		for i in range(len(output)):
 			print(f'Output: {" ".join(output_lang.index2word[a] for a in output[i].tolist())}', end=' ')
 			print(f'Target: {" ".join(output_lang.index2word[a] for a in target[i].tolist())}')
 

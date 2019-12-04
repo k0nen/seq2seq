@@ -89,16 +89,16 @@ def read_file(lang1, lang2, name, reverse=False):
 
 
 def filter_pairs(pairs):
-	"""eng_prefixes = (
+	eng_prefixes = (
 		"i am ", "i m ",
 		"he is", "he s ",
 		"she is", "she s",
 		"you are", "you re ",
 		"we are", "we re ",
 		"they are", "they re "
-	)"""
+	)
 
-	eng_prefixes = ("i", "he", "she", "you", "we", "they")
+	# eng_prefixes = ("i", "he", "she", "you", "we", "they")
 
 	def filter_pair(p):
 		return len(p[0].split(' ')) < MAX_LENGTH and \
